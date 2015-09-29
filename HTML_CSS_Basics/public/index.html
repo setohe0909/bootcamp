@@ -9,20 +9,20 @@
 	<section hidden  id="hidden">Hello world</section>
 	<input type="text" class="alias" id="alias">
 	<button id="btn1">Button</button>
-	<section></section>
+	<section id="responseField"></section>
 	<script>
 	"use strict"
 
 	jQuery(window).load(function () {
 	   console.log("Page is loaded");
-	   
+
        $("#hidden").fadeIn("slow");
        $(".alias").focus();
 	});
 
 	var ajaxResponse = function(obj) {
 		$.ajax({
-		   url: url,
+		   url: obj.url,
 		   data: {
 		      format: 'json'
 		   },
