@@ -24,7 +24,7 @@
 		$.ajax({
 		   url: obj.url,
 		   dataType: 'jsonp',
-		   type: 'GET'
+		   type: 'GET',
 		   data: {
 		      format: 'json'
 		   },
@@ -40,7 +40,7 @@
 
 	$("#btn1").click(function() {
 		var obj = {};
-		obj.inputText = $("#alias").value();
+		obj.inputText = $("#alias").val();
 		obj.url = "http://bootcamp.aws.af.cm/welcome/";
 
 		this.ajaxResponse(obj);
