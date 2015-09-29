@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML & CSS Basics</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+	<section hidden  id="hidden">Hello world</section>
+	<input type="text" class="alias" id="alias">
+	<button id="btn1">Button</button>
+	<section></section>
+	<script>
+	"use strict"
+
+	jQuery(window).load(function () {
+	   console.log("Page is loaded");
+	   
+       $("#hidden").fadeIn("slow");
+       $(".alias").focus();
+	});
+
+	var ajaxResponse = function(obj) {
+		$.ajax({
+		   url: url,
+		   data: {
+		      format: 'json'
+		   },
+		   error: function() {
+		      $('#info').html('<p>An error has occurred</p>');
+		   },
+		   dataType: 'jsonp',
+		   success: function(data) {
+		      var $title = $('<h1>').text(data.talks[0].talk_title);
+		      var $description = $('<p>').text(data.talks[0].talk_description);
+		      $('#info')
+		         .append($title)
+		         .append($description);
+		   },
+		   type: 'GET'
+		});
+	};
+
+	$("#btn1").click(function() {
+		var obj = {};
+		obj.inputText = $("#alias").value();
+		obj.url = "http://bootcamp.aws.af.cm/welcome/";
+
+		this.ajaxResponse(obj);
+	});
+	</script>
+</body>
+</html>
