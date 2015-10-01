@@ -7,43 +7,102 @@
 </head>
 <body>
 	<section hidden  id="hidden">Hello world</section>
-	<input type="text" class="alias" id="alias">
-	<button id="btn1">Button</button>
-	<section id="responseField"></section>
+	<section>
+		<input type="text" class="alias" id="alias">
+		<button id="btn1">Button</button>
+		<div id="responseField"></div>
+	</section>
+	<section class="searchSpotify">
+		<article class="textSearch">
+			<input type="text" >
+		</article>
+		<article class="albumSearch">
+			<aside id="albumFields">
+				<div class="album">
+					<p>
+						<strong>Name:</strong>
+						<strong>Type:</strong>
+						<strong>Image:</strong><br>
+							<img src="" alt="">
+						<strong>Rlease date:</strong>
+						<strong>Link:</strong>
+					</p>
+				</div>
+			</aside >
+		</article>
+	</section>
+	
 	<script>
 	"use strict"
 
+	var obj = {};
 	jQuery(window).load(function () {
 	   console.log("Page is loaded");
-
        $("#hidden").fadeIn("slow");
        $(".alias").focus();
+       ApiSpotify();
 	});
 
-	var ajaxResponse = function(obj) {
+	function ajax(obj) {
 		$.ajax({
 		   url: obj.url,
-		   dataType: 'jsonp',
+		   dataType: 'json',
 		   type: 'GET',
 		   data: {
 		      format: 'json'
 		   },
-		   error: function(data) {
-		      $('#responseField').html(data.error);
-		      $('#responseField').addClass();
-		   },
 		   success: function(data) {
-		   	$('#responseField').html(data.response);
+		   		switch(obj.check) {
+				    case "welcome":
+				        successWelcome(data);
+				        break;
+				    case "spotify":
+				    	successSpotify(data)
+				        break;
+				}
 		   },
+		   error: function() {
+	       		switch(obj.check) {
+				    case "welcome":
+				        errorWelcome();
+				        break;
+				    case "spotify":
+				    	errorSpotify
+				        break;
+				}
+		   }
 		});
 	};
 
-	$("#btn1").click(function() {
-		var obj = {};
-		obj.inputText = $("#alias").val();
-		obj.url = "http://bootcamp.aws.af.cm/welcome/";
+	function ApiSpotify() {
+		obj.url = "https://api.spotify.com/v1/search?q=Rolling%20Stones&type=album";
+		obj.check = "spotify";
+		ajax(obj);
+	}
 
-		this.ajaxResponse(obj);
+	function successWelcome(data){
+		$('#responseField').html(data.response);
+		$('#responseField').removeClass("invalid");
+	}
+	function errorWelcome(){
+		$('#responseField').html("Failed service");
+		$('#responseField').addClass("invalid");
+	}
+
+	function successSpotify(data){
+		$('#albumFields').removeClass("invalid");
+		$('#albumFields').html(data.response);
+	}
+	function errorSpotify(){
+		$('#albumFields').html("Failed service");
+		$('#albumFields').addClass("invalid");
+	}
+
+	$("#btn1").click(function() {
+		obj.inputText = $("#alias").val();
+		obj.url = "http://bootcamp.aws.af.cm/welcome/" + obj.inputText;
+		obj.check = "welcome";
+		ajax(obj);
 	});
 	</script>
 </body>
