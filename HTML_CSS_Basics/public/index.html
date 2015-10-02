@@ -9,14 +9,19 @@
 	<section hidden  id="hidden">
 		<div>Hello world</div>
 	</section>
-	<section>
-		<input type="text" class="alias" id="alias">
-		<button id="btn1">Button</button>
-		<div id="responseField"></div>
-	</section>
 	<section class="searchSpotify">
+		
 		<article class="textSearch">
-			<input type="text" >
+		<fieldset>
+			Alias: <input type="text" class="alias newline" id="alias">
+			<div id="responseField" class="newline"></div>
+			<button id="btn1" class="newline">Button</button>
+		</fieldset>
+		<fieldset>
+			Artist:<input type="text" class="newline" id="artists">
+			<button id="btn2" class="newline">Button</button>
+			<div id="flashMessage"></div>
+		</fieldset>
 		</article>
 		<article class="albumSearch">
 			<aside id="albumFields">
@@ -74,7 +79,13 @@
 				        break;
 				    case "spotify":
 				    	successSpotify(data);
-       					AppendData(data.albums.items);
+				    	if (data.albums.items.length === 0) {
+				    		$("#flashMessage").html("");
+				    		$("#flashMessage").append("<div class='invalid'>Failed service</div>");
+       					}else{
+       						$("#albumFields").html("");
+       						AppendData(data.albums.items);
+       					};
 				        break;
 				}
 		   },
@@ -91,8 +102,9 @@
 		});
 	};
 
-	function ApiSpotify() {
-		obj.url = "https://api.spotify.com/v1/search?q=Rolling%20Stones&type=album";
+	function ApiSpotify(art) {
+		var artist = (art === undefined ? "Rolling Stones" : art);
+		obj.url = "https://api.spotify.com/v1/search?q="+artist+"&type=album";
 		obj.check = "spotify";
 		ajax(obj);
 	};
@@ -120,6 +132,10 @@
 		obj.url = "http://bootcamp.aws.af.cm/welcome/" + obj.inputText;
 		obj.check = "welcome";
 		ajax(obj);
+	});
+	$("#btn2").click(function() {
+		var artist = $("#artists").val();
+		ApiSpotify(artist);
 	});
 	</script>
 </body>
