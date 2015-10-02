@@ -6,7 +6,9 @@
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 <body>
-	<section hidden  id="hidden">Hello world</section>
+	<section hidden  id="hidden">
+		<div>Hello world</div>
+	</section>
 	<section>
 		<input type="text" class="alias" id="alias">
 		<button id="btn1">Button</button>
@@ -18,16 +20,6 @@
 		</article>
 		<article class="albumSearch">
 			<aside id="albumFields">
-				<div class="album">
-					<p>
-						<strong>Name:</strong>
-						<strong>Type:</strong>
-						<strong>Image:</strong><br>
-							<img src="" alt="">
-						<strong>Rlease date:</strong>
-						<strong>Link:</strong>
-					</p>
-				</div>
 			</aside >
 		</article>
 	</section>
@@ -43,6 +35,30 @@
        ApiSpotify();
 	});
 
+	function AppendData(data) {
+		for (var i = 0; i < data.length; i++) {
+			$("#albumFields").append( 
+				"<div class='album'><fieldset><div class='newline'><strong>Name:</strong>"
+						+data[i].name+
+					"</div><div class='newline'><strong>Type:</strong>"
+						+data[i].type+
+					"</div><div class='newline'><strong>Image:</strong><img src='"
+					+data[i].images[1].url+
+					"' height='"
+					+data[i].images[1].height+
+					"'width='"
+					+data[i].images[1].width+
+					"' alt='"
+					+data[i].name+
+					"'></div><div class='newline'><strong>Link:</strong><a href='"
+						+data[i].external_urls.spotify+
+					"'>"
+					+data[i].external_urls.spotify+
+					"</a></div></fieldset></div>"
+				);
+		}
+	};
+
 	function ajax(obj) {
 		$.ajax({
 		   url: obj.url,
@@ -57,7 +73,8 @@
 				        successWelcome(data);
 				        break;
 				    case "spotify":
-				    	successSpotify(data)
+				    	successSpotify(data);
+       					AppendData(data.albums.items);
 				        break;
 				}
 		   },
@@ -67,7 +84,7 @@
 				        errorWelcome();
 				        break;
 				    case "spotify":
-				    	errorSpotify
+				    	errorSpotify();
 				        break;
 				}
 		   }
@@ -78,25 +95,25 @@
 		obj.url = "https://api.spotify.com/v1/search?q=Rolling%20Stones&type=album";
 		obj.check = "spotify";
 		ajax(obj);
-	}
+	};
 
 	function successWelcome(data){
 		$('#responseField').html(data.response);
 		$('#responseField').removeClass("invalid");
-	}
+	};
 	function errorWelcome(){
 		$('#responseField').html("Failed service");
 		$('#responseField').addClass("invalid");
-	}
+	};
 
 	function successSpotify(data){
 		$('#albumFields').removeClass("invalid");
 		$('#albumFields').html(data.response);
-	}
+	};
 	function errorSpotify(){
 		$('#albumFields').html("Failed service");
 		$('#albumFields').addClass("invalid");
-	}
+	};
 
 	$("#btn1").click(function() {
 		obj.inputText = $("#alias").val();
